@@ -1,0 +1,105 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: brute_force_alerts
+    folder: Security
+    interval: 10s
+    rules:
+      - uid: brute_force_detected
+        title: Brute Force Detectado
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: "rate(login_failures_total[1m]) > 0.166"
+              intervalMs: 10000
+              maxDataPoints: 100
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          summary: "Mais de 10 falhas de login em 1 minuto detectadas"
+        labels:
+          severity: critical
+
+  - orgId: 1
+    name: timeout_alerts
+    folder: Security
+    interval: 10s
+    rules:
+      - uid: auth_timeout_high
+        title: Timeout Elevado na Autenticacao
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: "rate(auth_request_duration_seconds_sum[1m]) / rate(auth_request_duration_seconds_count[1m]) > 3"
+              intervalMs: 10000
+              maxDataPoints: 100
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          summary: "Latencia media de autenticacao acima de 3 segundos"
+        labels:
+          severity: warning
+
+  - orgId: 1
+    name: finance_alerts
+    folder: Finance
+    interval: 10s
+    rules:
+      - uid: pix_failure_high
+        title: Falha PIX Elevada
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: "rate(pix_failures_total[1m]) > 0.083"
+              intervalMs: 10000
+              maxDataPoints: 100
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          summary: "Mais de 5 falhas PIX em 1 minuto detectadas"
+        labels:
+          severity: critical
+
+      - uid: finance_latency_critical
+        title: Latencia Critica Financeira
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: "rate(finance_request_duration_seconds_sum[1m]) / rate(finance_request_duration_seconds_count[1m]) > 3"
+              intervalMs: 10000
+              maxDataPoints: 100
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 30s
+        annotations:
+          summary: "Tempo medio de resposta financeiro acima de 3 segundos"
+        labels:
+          severity: warning

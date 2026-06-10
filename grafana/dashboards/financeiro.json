@@ -1,0 +1,80 @@
+{
+  "title": "Sprint 3 - Financeiro",
+  "uid": "sprint3-financeiro",
+  "panels": [
+    {
+      "title": "PIX por minuto",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(pix_transactions_total[1m])",
+          "legendFormat": "pix/min"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+    },
+    {
+      "title": "Falhas PIX",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m])",
+          "legendFormat": "pix failures/min"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
+    },
+    {
+      "title": "Volume Transacionado",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "transaction_volume_total",
+          "legendFormat": "volume"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
+    },
+    {
+      "title": "Latência Média Financeira",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(finance_request_duration_seconds_sum[1m]) / rate(finance_request_duration_seconds_count[1m])",
+          "legendFormat": "latencia media"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
+    },
+    {
+      "title": "Taxa de Erro Financeira",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m]) + rate(boleto_failures_total[1m])",
+          "legendFormat": "erros/min"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
+    },
+    {
+      "title": "Boleto Failures",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(boleto_failures_total[1m])",
+          "legendFormat": "boleto failures/min"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 }
+    }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}

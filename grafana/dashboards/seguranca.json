@@ -1,0 +1,104 @@
+{
+  "title": "Sprint 2 - Seguranca",
+  "uid": "sprint2-seguranca",
+  "panels": [
+    {
+      "title": "Login Success/min",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(login_success_total[1m])",
+          "legendFormat": "login success"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+    },
+    {
+      "title": "Login Failures/min",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(login_failures_total[1m])",
+          "legendFormat": "login failures"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
+    },
+    {
+      "title": "MFA Failures/min",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(mfa_failures_total[1m])",
+          "legendFormat": "mfa failures"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
+    },
+    {
+      "title": "Taxa de Erro 401",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(http_errors_total{status_code='401'}[1m])",
+          "legendFormat": "401 errors"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
+    },
+    {
+      "title": "Tempo Medio de Autenticacao",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(auth_request_duration_seconds_sum[1m]) / rate(auth_request_duration_seconds_count[1m])",
+          "legendFormat": "avg auth duration"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
+    },
+    {
+      "title": "Login Success (Gauge)",
+      "type": "gauge",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "login_success_total",
+          "legendFormat": "total"
+        }
+      ],
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 16 }
+    },
+    {
+      "title": "Login Failures (Gauge)",
+      "type": "gauge",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "login_failures_total",
+          "legendFormat": "total"
+        }
+      ],
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 16 }
+    },
+    {
+      "title": "Tabela de Eventos",
+      "type": "table",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sort_desc(login_failures_total + mfa_failures_total + auth_timeout_total)",
+          "legendFormat": "eventos"
+        }
+      ],
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 16 }
+    }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}
