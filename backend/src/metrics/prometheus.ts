@@ -92,4 +92,78 @@ export const transactionVolumeTotal = new client.Gauge({
   help: 'Total transaction volume amount',
 });
 
+export const deviceRegistrationsTotal = new client.Counter({
+  name: 'device_registrations_total',
+  help: 'Total number of device registrations',
+});
+
+export const suspiciousActionsTotal = new client.Counter({
+  name: 'suspicious_actions_total',
+  help: 'Total number of suspicious actions detected',
+});
+
+export const limitChangesTotal = new client.Counter({
+  name: 'limit_changes_total',
+  help: 'Total number of PIX limit changes',
+});
+
+export const bruteForceAttemptsTotal = new client.Counter({
+  name: 'brute_force_attempts_total',
+  help: 'Total number of brute force login attempts',
+});
+
+export const securityRequestDurationSeconds = new client.Histogram({
+  name: 'security_request_duration_seconds',
+  help: 'Duration of security requests in seconds',
+  labelNames: ['method', 'endpoint', 'status_code'],
+  buckets: [0.1, 0.5, 1, 2, 3, 5, 10],
+});
+
+export const incidentsTotal = new client.Counter({
+  name: 'incidents_total',
+  help: 'Total number of incidents triggered',
+});
+
+export const serviceDownTotal = new client.Counter({
+  name: 'service_down_total',
+  help: 'Total number of service down incidents',
+});
+
+export const timeoutEventsTotal = new client.Counter({
+  name: 'timeout_events_total',
+  help: 'Total number of timeout events',
+});
+
+export const internalErrorsTotal = new client.Counter({
+  name: 'internal_errors_total',
+  help: 'Total number of internal error incidents',
+});
+
+export const overloadEventsTotal = new client.Counter({
+  name: 'overload_events_total',
+  help: 'Total number of overload events',
+});
+
+export const simulatedCpuUsage = new client.Gauge({
+  name: 'simulated_cpu_usage',
+  help: 'Simulated CPU usage percentage',
+});
+
+export const simulatedMemoryUsage = new client.Gauge({
+  name: 'simulated_memory_usage',
+  help: 'Simulated memory usage percentage',
+});
+
+export const activeIncidentsGauge = new client.Gauge({
+  name: 'active_incidents_total',
+  help: 'Number of currently active incidents',
+});
+
+export const incidentRequestDurationSeconds = new client.Histogram({
+  name: 'incident_request_duration_seconds',
+  help: 'Duration of incident requests in seconds',
+  labelNames: ['method', 'endpoint', 'status_code'],
+  buckets: [0.1, 0.5, 1, 2, 3, 5, 10],
+});
+
 export { client };

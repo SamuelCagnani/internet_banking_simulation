@@ -1,42 +1,16 @@
 {
-  "title": "Seguranca",
-  "uid": "sprint2-seguranca",
-  "tags": ["seguranca", "sprint2", "auth"],
+  "title": "Seguranca Avancada",
+  "uid": "sprint4-seguranca-avancada",
+  "tags": ["seguranca", "sprint4", "fraude", "dispositivos"],
   "refresh": "10s",
   "time": { "from": "now-15m", "to": "now" },
   "panels": [
     {
-      "title": "Login Success/min",
+      "title": "Novos Dispositivos/min",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "rate(login_success_total[1m]) * 60", "legendFormat": "Success/min" }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null }
-            ]
-          },
-          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
-        }
-      },
-      "options": {
-        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
-        "tooltip": { "mode": "single", "sort": "none" }
-      },
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
-    },
-    {
-      "title": "Login Failures/min",
-      "type": "timeseries",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        { "expr": "rate(login_failures_total[1m]) * 60", "legendFormat": "Failures/min" }
+        { "expr": "rate(device_registrations_total[1m]) * 60", "legendFormat": "Dispositivos/min" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -50,7 +24,35 @@
               { "color": "red", "value": 10 }
             ]
           },
-          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+    },
+    {
+      "title": "Atividades Suspeitas/min",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "rate(suspicious_actions_total[1m]) * 60", "legendFormat": "Suspeitas/min" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 2 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "custom": { "fillOpacity": 30, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
         }
       },
       "options": {
@@ -60,11 +62,11 @@
       "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
     },
     {
-      "title": "MFA Failures/min",
+      "title": "Mudancas de Limite PIX/min",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "rate(mfa_failures_total[1m]) * 60", "legendFormat": "MFA Failures/min" }
+        { "expr": "rate(limit_changes_total[1m]) * 60", "legendFormat": "Mudancas/min" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -75,10 +77,10 @@
             "steps": [
               { "color": "green", "value": null },
               { "color": "yellow", "value": 3 },
-              { "color": "red", "value": 6 }
+              { "color": "red", "value": 5 }
             ]
           },
-          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
         }
       },
       "options": {
@@ -88,22 +90,23 @@
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
     },
     {
-      "title": "Taxa de Erro 401",
+      "title": "Brute Force Attempts/min",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "rate(http_errors_total{status_code='401'}[1m])", "legendFormat": "401 errors/s" }
+        { "expr": "rate(brute_force_attempts_total[1m]) * 60", "legendFormat": "Attempts/min" }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "reqps",
+          "unit": "short",
           "color": { "mode": "thresholds" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
               { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.1 },
-              { "color": "red", "value": 0.2 }
+              { "color": "yellow", "value": 5 },
+              { "color": "orange", "value": 10 },
+              { "color": "red", "value": 15 }
             ]
           },
           "custom": { "fillOpacity": 30, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
@@ -116,11 +119,11 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
     },
     {
-      "title": "Tempo Medio de Autenticacao",
+      "title": "Latencia de Seguranca",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "rate(auth_request_duration_seconds_sum[1m]) / rate(auth_request_duration_seconds_count[1m])", "legendFormat": "{{endpoint}}" }
+        { "expr": "rate(security_request_duration_seconds_sum[1m]) / rate(security_request_duration_seconds_count[1m])", "legendFormat": "{{endpoint}}" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -130,9 +133,9 @@
             "mode": "absolute",
             "steps": [
               { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 2 },
-              { "color": "red", "value": 3 }
+              { "color": "yellow", "value": 0.5 },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 2 }
             ]
           },
           "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
@@ -145,11 +148,11 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
     },
     {
-      "title": "Login Success Total",
+      "title": "Devices Registrados",
       "type": "stat",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "login_success_total + (login_success_total * 0)" }
+        { "expr": "device_registrations_total" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -164,14 +167,14 @@
         }
       },
       "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
-      "gridPos": { "h": 3, "w": 3, "x": 0, "y": 16 }
+      "gridPos": { "h": 3, "w": 4, "x": 0, "y": 16 }
     },
     {
-      "title": "Login Failures Total",
+      "title": "Acoes Suspeitas",
       "type": "stat",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "login_failures_total + (login_failures_total * 0)" }
+        { "expr": "suspicious_actions_total" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -180,20 +183,22 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": null }
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
             ]
           }
         }
       },
       "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
-      "gridPos": { "h": 3, "w": 3, "x": 3, "y": 16 }
+      "gridPos": { "h": 3, "w": 4, "x": 4, "y": 16 }
     },
     {
-      "title": "MFA Success Total",
+      "title": "Mudancas de Limite",
       "type": "stat",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "mfa_success_total + (mfa_success_total * 0)" }
+        { "expr": "limit_changes_total" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -202,20 +207,22 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 10 }
             ]
           }
         }
       },
       "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
-      "gridPos": { "h": 3, "w": 3, "x": 6, "y": 16 }
+      "gridPos": { "h": 3, "w": 4, "x": 8, "y": 16 }
     },
     {
-      "title": "MFA Failures Total",
+      "title": "Brute Force Total",
       "type": "stat",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "mfa_failures_total + (mfa_failures_total * 0)" }
+        { "expr": "brute_force_attempts_total" }
       ],
       "fieldConfig": {
         "defaults": {
@@ -224,49 +231,29 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": null }
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 10 },
+              { "color": "red", "value": 50 }
             ]
           }
         }
       },
       "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
-      "gridPos": { "h": 3, "w": 3, "x": 9, "y": 16 }
+      "gridPos": { "h": 3, "w": 4, "x": 12, "y": 16 }
     },
     {
-      "title": "Auth Timeouts",
-      "type": "stat",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        { "expr": "auth_timeout_total + (auth_timeout_total * 0)" }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "orange", "value": null }
-            ]
-          }
-        }
-      },
-      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
-      "gridPos": { "h": 3, "w": 3, "x": 12, "y": 16 }
-    },
-    {
-      "title": "Tabela de Eventos de Seguranca",
-      "type": "table",
+      "title": "Eventos de Seguranca por Categoria",
+      "type": "bargauge",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
         {
-          "expr": "sort_desc(login_failures_total + mfa_failures_total + auth_timeout_total + brute_force_attempts_total + suspicious_actions_total)",
-          "format": "table",
-          "instant": true
+          "expr": "device_registrations_total OR suspicious_actions_total OR limit_changes_total OR brute_force_attempts_total",
+          "legendFormat": "{{__name__}}"
         }
       ],
       "fieldConfig": {
         "defaults": {
+          "unit": "short",
           "color": { "mode": "thresholds" },
           "thresholds": {
             "mode": "absolute",
@@ -278,10 +265,10 @@
           }
         }
       },
-      "options": {},
-      "gridPos": { "h": 6, "w": 9, "x": 15, "y": 16 }
+      "options": { "orientation": "horizontal", "displayMode": "gradient", "showUnfilled": true },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 16 }
     }
   ],
   "schemaVersion": 38,
-  "version": 2
+  "version": 1
 }

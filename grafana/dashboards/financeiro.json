@@ -1,80 +1,313 @@
 {
-  "title": "Sprint 3 - Financeiro",
+  "title": "Financeiro",
   "uid": "sprint3-financeiro",
+  "tags": ["financeiro", "sprint3", "pix"],
+  "refresh": "10s",
+  "time": { "from": "now-15m", "to": "now" },
   "panels": [
     {
-      "title": "PIX por minuto",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "title": "PIX por Minuto",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "rate(pix_transactions_total[1m])",
-          "legendFormat": "pix/min"
-        }
+        { "expr": "rate(pix_transactions_total[1m]) * 60", "legendFormat": "PIX/min" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
     },
     {
-      "title": "Falhas PIX",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "title": "Falhas PIX por Minuto",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m])",
-          "legendFormat": "pix failures/min"
-        }
+        { "expr": "(rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m])) * 60", "legendFormat": "Falhas/min" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 3 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
     },
     {
-      "title": "Volume Transacionado",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "title": "Volume Transacionado (BRL)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "transaction_volume_total",
-          "legendFormat": "volume"
-        }
+        { "expr": "transaction_volume_total", "legendFormat": "Volume BRL" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "BRL",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          },
+          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
     },
     {
-      "title": "Latência Média Financeira",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "title": "Latencia Media Financeira",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "rate(finance_request_duration_seconds_sum[1m]) / rate(finance_request_duration_seconds_count[1m])",
-          "legendFormat": "latencia media"
-        }
+        { "expr": "rate(finance_request_duration_seconds_sum[1m]) / rate(finance_request_duration_seconds_count[1m])", "legendFormat": "{{endpoint}}" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "orange", "value": 2 },
+              { "color": "red", "value": 3 }
+            ]
+          },
+          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
     },
     {
       "title": "Taxa de Erro Financeira",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m]) + rate(boleto_failures_total[1m])",
-          "legendFormat": "erros/min"
-        }
+        { "expr": "rate(pix_failures_total[1m]) + rate(pix_timeout_total[1m]) + rate(boleto_failures_total[1m])", "legendFormat": "Errors/s" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.05 },
+              { "color": "red", "value": 0.1 }
+            ]
+          },
+          "custom": { "fillOpacity": 30, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
     },
     {
-      "title": "Boleto Failures",
-      "type": "graph",
-      "datasource": "Prometheus",
+      "title": "Boletos Pagos/min",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "rate(boleto_failures_total[1m])",
-          "legendFormat": "boleto failures/min"
-        }
+        { "expr": "rate(boleto_payments_total[1m]) * 60", "legendFormat": "Boletos/min" }
       ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          },
+          "custom": { "fillOpacity": 20, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 }
+    },
+    {
+      "title": "Falhas de Boleto/min",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "rate(boleto_failures_total[1m]) * 60", "legendFormat": "Falhas/min" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean"] },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 }
+    },
+    {
+      "title": "PIX Success Total",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "pix_transactions_total" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "gridPos": { "h": 3, "w": 4, "x": 0, "y": 24 }
+    },
+    {
+      "title": "PIX Failures",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "pix_failures_total" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "gridPos": { "h": 3, "w": 4, "x": 4, "y": 24 }
+    },
+    {
+      "title": "PIX Timeouts",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "pix_timeout_total" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "gridPos": { "h": 3, "w": 4, "x": 8, "y": 24 }
+    },
+    {
+      "title": "Boletos Pagos",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "boleto_payments_total" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "gridPos": { "h": 3, "w": 4, "x": 12, "y": 24 }
+    },
+    {
+      "title": "Boleto Failures",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "boleto_failures_total" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null }
+            ]
+          }
+        }
+      },
+      "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "gridPos": { "h": 3, "w": 4, "x": 16, "y": 24 }
     }
   ],
   "schemaVersion": 38,
-  "version": 1
+  "version": 2
 }

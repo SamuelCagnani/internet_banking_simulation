@@ -4,6 +4,8 @@ import Header from './components/Header';
 import MainPanel from './components/MainPanel';
 import AuthPanel from './components/AuthPanel';
 import FinancePanel from './components/FinancePanel';
+import SecurityPanel from './components/SecurityPanel';
+import IncidentPanel from './components/IncidentPanel';
 import LogPanel from './components/LogPanel';
 
 interface LogEntry {
@@ -44,6 +46,7 @@ export default function App() {
         return (
           <>
             <AuthPanel onEvent={handleEvent} />
+            <SecurityPanel onEvent={handleEvent} />
             <LogPanel events={events} />
           </>
         );
@@ -51,6 +54,13 @@ export default function App() {
         return (
           <>
             <FinancePanel onEvent={handleEvent} />
+            <LogPanel events={events} />
+          </>
+        );
+      case 'Incidentes':
+        return (
+          <>
+            <IncidentPanel onEvent={handleEvent} />
             <LogPanel events={events} />
           </>
         );
