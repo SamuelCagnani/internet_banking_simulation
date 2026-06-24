@@ -286,3 +286,114 @@ backend/src/
 | IncidentPanel | `frontend/src/components/IncidentPanel.tsx` | Botoes de incidentes + status |
 | LogPanel | `frontend/src/components/LogPanel.tsx` | Lista de ultimos eventos |
 | Icon | `frontend/src/components/Icon.tsx` | Icones SVG inline (Feather) |
+
+---
+
+## CI/CD — GitHub Actions
+
+**Arquivo:** `.github/workflows/ci.yml`
+
+### Trigger (quando roda)
+
+O workflow dispara automaticamente em:
+
+| Evento | Condicao |
+|--------|----------|
+| `push` | Branch `main` |
+| `pull_request` | Branch `main` |
+
+### Jobs (o que executa)
+
+O pipeline tem **3 jobs** que rodam em paralelo (backend + frontend) e depois o Docker:
+
+```
+┌──────────────────┐    ┌───────────────────┐
+│ backend-build    │    │ frontend-build    │
+│ (ubuntu-latest)  │    │ (ubuntu-latest)   │
+│                  │    │                   │
+│ 1. checkout      │    │ 1. checkout       │
+│ 2. setup-node 20 │    │ 2. setup-node 20  │
+│ 3. npm ci        │    │ 3. npm ci         │
+│ 4. tsc (build)   │    │ 4. tsc + vite     │
+└────────┬─────────┘    └────────┬──────────┘
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+         ┌───────────────────┐
+         │ docker-build      │
+         │ (ubuntu-latest)   │
+         │                   │
+         │ 1. checkout       │
+         │ 2. docker build   │
+         │    backend image  │
+         │ 3. docker build   │
+         │    frontend image │
+         └───────────────────┘
+```
+
+### Job 1: Backend Build (linha 10-24)
+
+```yaml
+backend-build:
+  runs-on: ubuntu-latest
+  defaults:
+    run:
+      working-directory: backend    # todos os comandos rodam em backend/
+  steps:
+    - uses: actions/checkout@v4    # clona o repo
+    - uses: actions/setup-node@v4  # instala Node 20
+      with:
+        node-version: 20
+        cache: npm                  # cache do node_modules
+        cache-dependency-path: backend/package-lock.json
+    - run: npm ci                  # instala deps (mais rapido que npm install)
+    - run: npm run build           # tsc — compila TypeScript
+```
+
+### Job 2: Frontend Build (linha 26-40)
+
+```yaml
+frontend-build:
+  runs-on: ubuntu-latest
+  defaults:
+    run:
+      working-directory: frontend
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+    - run: npm ci
+    - run: npm run build           # tsc && vite build
+```
+
+### Job 3: Docker Build (linha 42-51)
+
+```yaml
+docker-build:
+  needs: [backend-build, frontend-build]  # so roda se os 2 passarem
+  steps:
+    - uses: actions/checkout@v4
+    - run: docker build -t banking-backend ./backend
+    - run: docker build -t banking-frontend ./frontend
+```
+
+### Por que foi configurado assim
+
+| Decisao | Motivo |
+|---------|--------|
+| `npm ci` em vez de `npm install` | Mais rapido e deterministico (usa lockfile exato) |
+| `working-directory` por job | Cada job roda em sua pasta, sem precisar de `cd` |
+| `cache: npm` | Acelera builds futuros reusando node_modules |
+| `needs: [backend, frontend]` no Docker | So builda imagens se o codigo compilar |
+| Backend + Frontend em paralelo | Builds independentes, rodam juntos pra economizar tempo |
+| Node 20 fixo | Mesma versao do Dockerfile e dev local |
+
+### Como ver o resultado
+
+No GitHub: **Actions** → clique no workflow mais recente → veja logs de cada job.
+
+Status badges visiveis no topo do README (opcional, nao adicionado).
+
