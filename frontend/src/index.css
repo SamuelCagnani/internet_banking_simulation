@@ -2,8 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a2552 #0d1326;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0d1326;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #1a2552;
+  border-radius: 3px;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', sans-serif;
+  background: #070b19;
+  color: #e2e8f0;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(6, 182, 212, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(6, 182, 212, 0.4); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.card-glass {
+  background: rgba(13, 19, 38, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(6, 182, 212, 0.08);
 }

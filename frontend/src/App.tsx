@@ -17,10 +17,10 @@ interface LogEntry {
 }
 
 const navItems = [
-  { label: 'Dashboard', icon: '📊' },
-  { label: 'Segurança', icon: '🔒' },
-  { label: 'Operações', icon: '💰' },
-  { label: 'Incidentes', icon: '⚠️' },
+  { label: 'Dashboard', icon: 'dashboard' },
+  { label: 'Segurança', icon: 'shield' },
+  { label: 'Operações', icon: 'wallet' },
+  { label: 'Incidentes', icon: 'alert' },
 ];
 
 export default function App() {
