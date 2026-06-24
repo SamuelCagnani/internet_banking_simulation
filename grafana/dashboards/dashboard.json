@@ -41,13 +41,13 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "color": { "mode": "thresholds" },
+          "color": { "mode": "palette-classic" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 2 },
+              { "color": "transparent", "value": null },
+              { "color": "transparent", "value": 1 },
+              { "color": "transparent", "value": 2 },
               { "color": "red", "value": 5 }
             ]
           },
