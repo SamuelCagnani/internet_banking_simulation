@@ -88,16 +88,17 @@
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 }
     },
     {
-      "title": "Taxa de Erro 401",
+      "title": "Taxa de Erro 401 (por endpoint)",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        { "expr": "rate(http_errors_total{status_code='401'}[1m])", "legendFormat": "401 errors/s" }
+        { "expr": "sum(rate(http_errors_total{status_code='401'}[1m]))", "legendFormat": "Total 401/s" },
+        { "expr": "rate(http_errors_total{status_code='401'}[1m])", "legendFormat": "401 — {{method}} {{endpoint}}" }
       ],
       "fieldConfig": {
         "defaults": {
           "unit": "reqps",
-          "color": { "mode": "thresholds" },
+          "color": { "mode": "palette-classic" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -106,12 +107,12 @@
               { "color": "red", "value": 0.2 }
             ]
           },
-          "custom": { "fillOpacity": 30, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
+          "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
         }
       },
       "options": {
         "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
-        "tooltip": { "mode": "single", "sort": "none" }
+        "tooltip": { "mode": "multi", "sort": "none" }
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
     },
@@ -125,18 +126,19 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "color": { "mode": "thresholds" },
+          "color": { "mode": "palette-classic" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 2 },
+              { "color": "transparent", "value": null },
+              { "color": "transparent", "value": 1 },
+              { "color": "transparent", "value": 2 },
               { "color": "red", "value": 3 }
             ]
           },
           "custom": { "fillOpacity": 25, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
-        }
+        },
+        "overrides": []
       },
       "options": {
         "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
