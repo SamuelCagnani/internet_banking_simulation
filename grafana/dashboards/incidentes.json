@@ -223,35 +223,6 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 }
     },
     {
-      "title": "Erros 5xx por Minuto",
-      "type": "timeseries",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        { "expr": "rate(http_errors_total{status_code=~'5..'}[1m]) * 60", "legendFormat": "5xx/min" }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 5 },
-              { "color": "orange", "value": 10 },
-              { "color": "red", "value": 20 }
-            ]
-          },
-          "custom": { "fillOpacity": 30, "gradientMode": "opacity", "lineWidth": 2, "showPoints": "never" }
-        }
-      },
-      "options": {
-        "legend": { "showLegend": true, "displayMode": "table", "placement": "bottom", "calcs": ["lastNotNull", "mean", "max"] },
-        "tooltip": { "mode": "single", "sort": "none" }
-      },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 }
-    },
-    {
       "title": "Resumo de Incidentes",
       "type": "table",
       "datasource": { "type": "prometheus", "uid": "prometheus" },

@@ -240,33 +240,6 @@
       },
       "options": { "colorMode": "background", "graphMode": "none", "textMode": "auto" },
       "gridPos": { "h": 3, "w": 4, "x": 12, "y": 16 }
-    },
-    {
-      "title": "Eventos de Seguranca por Categoria",
-      "type": "bargauge",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "device_registrations_total OR suspicious_actions_total OR limit_changes_total OR brute_force_attempts_total",
-          "legendFormat": "{{__name__}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": { "mode": "thresholds" },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 5 },
-              { "color": "red", "value": 20 }
-            ]
-          }
-        }
-      },
-      "options": { "orientation": "horizontal", "displayMode": "gradient", "showUnfilled": true },
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 16 }
     }
   ],
   "schemaVersion": 38,
